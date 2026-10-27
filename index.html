@@ -415,7 +415,7 @@ function applySiteData(remote){
    if(/^(?:assets\/)?tejas\.jpeg$/i.test(photo))photo='assets/tejas.jpeg';
    return '<figure class="pol rv"><span class="ph"><span class="mon">'+esc(initials)+'</span>'+(photo?'<img src="'+esc(photo)+'" alt="'+esc(name)+'" loading="lazy" onerror="this.remove()">':'')+'</span><figcaption><span class="pm"><span class="pn">'+esc(name)+'</span><span class="pr">'+esc(member.role||'')+'</span></span>'+(url?'<a class="ig" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer" aria-label="'+esc(name)+' on Instagram"><svg class="igi" aria-hidden="true"><use href="#igI"></use></svg><span>'+esc(member.handle||'Instagram')+'</span></a>':'')+'</figcaption></figure>';
   }).join('');
-  arm();
+  window.dispatchEvent(new Event('site-team-updated'));
  }
  var settings=remote.settings||{},number=String(settings.whatsapp||'').replace(/\D/g,'');
  if(number)waNumber=number;
@@ -520,6 +520,7 @@ if(IG_FEED_URL){fetch(IG_FEED_URL).then(function(r){return r.json();}).then(func
 var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var t=e.target;t.classList.add('in');io.unobserve(t);setTimeout(function(){t.style.setProperty('--d','0ms');},1400);}});},{threshold:.12,rootMargin:'0px 0px -6% 0px'});
 function arm(){[].slice.call(document.querySelectorAll('#about .rv')).forEach(function(el){if(!el.parentNode)return;el.classList.remove('in');el.style.setProperty('--d',Math.min([].indexOf.call(el.parentNode.children,el),5)*90+'ms');io.observe(el);});}
 arm();
+addEventListener('site-team-updated',arm);
 document.querySelectorAll('#about .card').forEach(function(c){c.addEventListener('pointermove',function(e){var r=c.getBoundingClientRect();c.style.setProperty('--mx',(e.clientX-r.left)+'px');c.style.setProperty('--my',(e.clientY-r.top)+'px');});});
 var ap=document.getElementById('aprog');addEventListener('scroll',function(){var m=document.documentElement.scrollHeight-innerHeight;ap.style.width=(m>0?scrollY/m*100:0)+'%';},{passive:true});
 function route(first){
